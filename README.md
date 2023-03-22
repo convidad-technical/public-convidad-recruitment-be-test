@@ -26,6 +26,7 @@ Book data should be saveable and retrievable (but need not necessarily persist).
 3. **Optional** (nice to have) Try to generate a Docker image for the project.
 4. **Optional** (nice to have) Add swagger.
 5. **Optional** (nice to have) Create an enpoint to connect to an external api to retrieve real book data.
+6. **Optional** Do you want to go even further? Create an endpoint to retrieve a document with 3 million random generated models of Authors (.json formatted)
 
 ### What we will be looking at
 - How do you refactor the existing code to make it more readable and structured?
