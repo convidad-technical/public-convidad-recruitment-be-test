@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryDatabase
 {
@@ -23,7 +24,8 @@ namespace LibraryDatabase
 
         #region Relationships
 
-        public ICollection<Book> Books { get; }
+        [NotMapped]
+        public virtual ICollection<Book> Books { get; set; }
 
         #endregion
     }

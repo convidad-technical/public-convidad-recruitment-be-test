@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LibraryDatabase
 {
@@ -16,6 +17,8 @@ namespace LibraryDatabase
         public string Isbn { get; set; }
 
         public DateTime PublicationDate { get; set; }
+
+        public int AuthorId { get; set; }
 
         #endregion
 
