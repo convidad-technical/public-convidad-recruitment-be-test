@@ -1,8 +1,8 @@
 using System;
 
-namespace LibraryDatabase
+namespace LibraryDatabase.Domain
 {
-    public class Book
+    public class Book : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

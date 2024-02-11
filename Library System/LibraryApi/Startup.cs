@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LibraryDatabase.Domain;
+using LibraryDatabase.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,8 +28,12 @@ namespace LibraryDatabase
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            
-            services.AddSingleton<Dictionary<int, Book>>(new Dictionary<int, Book>());
+
+            services.AddSingleton<List<Author>>(new List<Author>());
+            services.AddSingleton<List<Book>>(new List<Book>());
+
+            services.AddTransient<IAuthorService, AuthorService>();
+            services.AddTransient<IBookService, BookService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

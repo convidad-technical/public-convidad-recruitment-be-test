@@ -1,3 +1,5 @@
+using LibraryDatabase.Domain;
+using LibraryDatabase.Services;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
@@ -9,37 +11,37 @@ namespace LibraryDatabase.Controllers
     [Route("api/[controller]")]
     public class BookController : Controller
     {
-        public Dictionary<int, Book> Librarybooks = new Dictionary<int, Book>();
-        public Dictionary<int, Author> Libraryauthors = new Dictionary<int, Author>();
+        private readonly IBookService BookService;
 
-        public BookController(Dictionary<int, Book> librarybooks)
+        public BookController(IBookService bookService)
         {
-            this.Librarybooks = librarybooks;
+            this.BookService = bookService;
         }
 
         [HttpGet]
         public IActionResult GetAllBooks()
         {
-            return Ok(Librarybooks.Values);
+            return Ok(this.BookService.GetAll());
         }
 
         [HttpGet("{id}")]
-        public IActionResult getbook(int id)
+        public IActionResult Getbook(int id)
         {
-            if (!Librarybooks.ContainsKey(id))
+            Book book = this.BookService.GetById(id);
+            if (book == null)
             {
                 throw new Exception();
             }
             else
             {
-                return Ok(Librarybooks[id]);
+                return Ok(book);
             }
         }
 
         [HttpPost]
         public IActionResult AddBook(Book book)
         {
-            Librarybooks.Add(book.Id, book);
+            book = this.BookService.Add(book);
             return Ok(book.Id);
         }
     }
