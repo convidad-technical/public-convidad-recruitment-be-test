@@ -6,7 +6,7 @@ using System;
 
 namespace LibraryDatabase.Controllers
 {
-    [Route("api/author")]
+    [Route("api/authors")]
     public class AuthorController : Controller
     {
         private readonly IAuthorService AuthorService;

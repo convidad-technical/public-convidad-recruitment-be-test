@@ -1,19 +1,22 @@
 using LibraryDatabase.Domain;
 using LibraryDatabase.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
 
 namespace LibraryDatabase.Controllers
 {
-    [Route("api/book")]
+    [Route("api/books")]
     public class BookController : Controller
     {
         private readonly IBookService BookService;
+        private readonly IAuthorService AuthorService;
 
-        public BookController(IBookService bookService)
+        public BookController(IBookService bookService, IAuthorService authorService)
         {
             this.BookService = bookService;
+            this.AuthorService = authorService;
         }
 
         [HttpGet]
@@ -28,19 +31,32 @@ namespace LibraryDatabase.Controllers
             Book book = this.BookService.GetById(id);
             if (book == null)
             {
-                throw new Exception();
+                throw new InvalidOperationException($"Book with id {id} not found.");
             }
             else
             {
-                return Ok(book);
+                Author author = this.AuthorService.GetById(book.AuthorId);
+
+                return Ok(new BookWithAuthorDTO()
+                {
+                    Book = book,
+                    Author = author
+                });
             }
         }
 
         [HttpPost]
         public IActionResult AddBook(Book book)
         {
-            book = this.BookService.Add(book);
-            return Ok(book.Id);
+            try
+            {
+                book = this.BookService.Add(book);
+                return Ok(book.Id);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
     }
 }

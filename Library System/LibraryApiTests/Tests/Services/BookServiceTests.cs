@@ -137,6 +137,8 @@ namespace LibraryApiTests.Tests.Services
                 BithDate = DateTime.Now.AddYears(-52)
             };
 
+            this.AuthorService.Add(author);
+
             // Create one book
             Book book = new Book()
             {

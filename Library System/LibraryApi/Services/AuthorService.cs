@@ -53,9 +53,14 @@ namespace LibraryDatabase.Services
 
         private void ValidateEntity(Author author)
         {
+            if (author.Id == 0)
+            {
+                throw new ArgumentNullException("The author id cannot be 0 or null.");
+            }
+
             if (string.IsNullOrEmpty(author.Name))
             {
-                throw new ArgumentNullException($"The name of the author cannot be empty or null.");
+                throw new ArgumentNullException("The name of the author cannot be empty or null.");
             }
         }
     }
