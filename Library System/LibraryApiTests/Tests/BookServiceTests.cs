@@ -36,7 +36,7 @@ namespace LibraryApiTests.Tests
         [Fact]
         public void CRUDBookTest()
         {
-            // Create a new book with an incorrect ISBN
+            // Create a new book with ISBN and Name empty
             Book book = new Book()
             {
                 Id = 1,
@@ -45,22 +45,25 @@ namespace LibraryApiTests.Tests
                 PublicationDate = DateTime.Now
             };
 
-            // Add the book expecting throws an exception
-            Assert.Throws<InvalidOperationException>(() => this.BookService.Add(book));
+            // Try to update the book, expecting throws an exception
+            Assert.Throws<ArgumentException>(() => this.BookService.Update(book));
 
-            // Change the name of the book
+            // Add the book expecting throws an exception
+            Assert.Throws<ArgumentNullException>(() => this.BookService.Add(book));
+
+            // Sets the name of the book
             book.Name = "Book test 1";
 
             // Add the book expecting throws an exception
-            Assert.Throws<InvalidOperationException>(() => this.BookService.Add(book));
+            Assert.Throws<ArgumentNullException>(() => this.BookService.Add(book));
 
-            // Change the ISBN of the book with an incorrect one
+            // Sets the ISBN of the book with an incorrect one
             book.Isbn = "0";
 
             // Add the book expecting throws an exception
-            Assert.Throws<InvalidOperationException>(() => this.BookService.Add(book));
+            Assert.Throws<ArgumentException>(() => this.BookService.Add(book));
 
-            // Put a correct ISBN to save the book
+            // Sets a correct ISBN to save the book
             book.Isbn = this.Utils.GenerateISBN();
             this.BookService.Add(book);
 

@@ -9,6 +9,6 @@ namespace LibraryDatabase.Domain
         public string Name { get; set; }
         public string Nationality { get; set; }
         public DateTime BithDate { get; set; }
-        public IEnumerable<Book> Books { get; set; }
+        public List<Book> Books { get; set; }
     }
 }

@@ -29,8 +29,8 @@ namespace LibraryDatabase
         {
             services.AddControllers();
 
-            services.AddSingleton<List<Author>>(new List<Author>());
-            services.AddSingleton<List<Book>>(new List<Book>());
+            services.AddSingleton<Dictionary<int, Author>>(new Dictionary<int, Author>());
+            services.AddSingleton<Dictionary<int, Book>>(new Dictionary<int, Book>());
 
             services.AddTransient<IAuthorService, AuthorService>();
             services.AddTransient<IBookService, BookService>();

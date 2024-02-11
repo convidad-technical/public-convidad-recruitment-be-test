@@ -83,17 +83,17 @@ namespace LibraryDatabase.Services
         {
             if (string.IsNullOrEmpty(book.Name))
             {
-                throw new InvalidOperationException($"The name of the book cannot be empty or null.");
+                throw new ArgumentNullException($"The name of the book cannot be empty or null.");
             }
 
             if (string.IsNullOrEmpty(book.Isbn))
             {
-                throw new InvalidOperationException($"The ISBN of the book cannot be empty or null.");
+                throw new ArgumentNullException($"The ISBN of the book cannot be empty or null.");
             }
 
             if (!this.ValidateISBN(book.Isbn))
             {
-                throw new InvalidOperationException($"The following ISBN {book.Isbn} is incorrect.");
+                throw new ArgumentException($"The following ISBN {book.Isbn} is incorrect.");
             }
 
             if (this.CheckIfISBNAlreadyExists(book.Isbn, book.Id))
@@ -103,7 +103,7 @@ namespace LibraryDatabase.Services
 
             if (book.PublicationDate == null)
             {
-                throw new InvalidOperationException($"The publication date of the book cannot be null.");
+                throw new ArgumentException($"The publication date of the book cannot be null.");
             }
         }
     }
