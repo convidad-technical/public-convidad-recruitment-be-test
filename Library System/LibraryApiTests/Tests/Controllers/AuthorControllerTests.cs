@@ -19,15 +19,15 @@ namespace LibraryApiTests.Tests.Controllers
 
         public AuthorControllerTests()
         {
-            BookService bookService = new BookService(new RepositoryService<Book>());
-            AuthorService authorService = new AuthorService(new RepositoryService<Author>(), bookService);
+            AuthorService authorService = new AuthorService(new RepositoryService<Author>());
+            BookService bookService = new BookService(new RepositoryService<Book>(), authorService);
             this.AuthorController = new AuthorController(authorService);
         }
 
         [Fact]
         public void AddAuthorReturnsOKResult()
         {
-            Author author = new Author { Id = 10, Name = "Author test 10" };
+            Author author = new Author { Id = 20, Name = "Author test 20" };
 
             var result = this.AuthorController.AddAuthor(author) as OkObjectResult;
 
@@ -40,7 +40,7 @@ namespace LibraryApiTests.Tests.Controllers
         public void AddAuthorReturnsKOResult()
         {
             // Creates a new author
-            Author author = new Author { Id = 11, Name = "" };
+            Author author = new Author { Id = 21, Name = "" };
 
             // Add the author by API
             var result = this.AuthorController.AddAuthor(author) as ObjectResult;

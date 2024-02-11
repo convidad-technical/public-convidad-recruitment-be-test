@@ -8,12 +8,10 @@ namespace LibraryDatabase.Services
     public class AuthorService : IAuthorService
     {
         private readonly IRepository<Author> RepositoryService;
-        private readonly IBookService BookService;
 
-        public AuthorService(IRepository<Author> repositoryService, IBookService bookService)
+        public AuthorService(IRepository<Author> repositoryService)
         {
             this.RepositoryService = repositoryService;
-            this.BookService = bookService;
         }
 
         Author IRepository<Author>.GetById(int id)
@@ -30,15 +28,7 @@ namespace LibraryDatabase.Services
         {
             this.ValidateEntity(author);
 
-            List<Book> books = author.Books;
-            author.Books = null;
-
             this.RepositoryService.Add(author);
-
-            if (books != null && books.Any())
-            {
-                this.AddOrUpdateBooks(author, books);
-            }
 
             return author;
         }
@@ -47,15 +37,7 @@ namespace LibraryDatabase.Services
         {
             this.ValidateEntity(author);
 
-            List<Book> books = author.Books;
-            author.Books = null;
-
             this.RepositoryService.Update(author);
-
-            if (books != null && books.Any())
-            {
-                this.AddOrUpdateBooks(author, books);
-            }
         }
 
         void IRepository<Author>.DeleteById(int id)
@@ -63,104 +45,10 @@ namespace LibraryDatabase.Services
             this.RepositoryService.DeleteById(id);
         }
 
-        public void DeleteWithAllDataById(int id)
-        {
-            Author author = this.RepositoryService.GetById(id);
-
-            if (author != null)
-            {
-                if (author.Books != null && author.Books.Any())
-                {
-                    foreach (Book book in author.Books)
-                    {
-                        this.BookService.DeleteById(book.Id);
-                    }
-                }
-
-                this.RepositoryService.DeleteById(author.Id);
-            }
-        }
-
-        public void AddExistingBookToAuthorById(int idAuthor, int idBook)
-        {
-            Author author = this.RepositoryService.GetById(idAuthor);
-
-            if (author == null)
-            {
-                throw new InvalidOperationException($"The author with id {idAuthor} doesnt't exists");
-            }
-
-            Book book = this.BookService.GetById(idBook);
-
-            if (book == null)
-            {
-                throw new InvalidOperationException($"The book with id {idBook} doesnt't exists");
-            }
-
-            if (!author.Books.Contains(book))
-            {
-                Author authorOfTheBook = this.GetAuthorByBookId(idBook);
-
-                if (authorOfTheBook != null)
-                {
-                    authorOfTheBook.Books.Remove(book);
-                    this.RepositoryService.Update(authorOfTheBook);
-                }
-
-                author.Books.Add(book);
-                this.RepositoryService.Update(author);
-            }
-        }
-
         public Author GetAuthorByBookId(int bookId)
         {
-            Author author;
-            Book book;
-
-            List<Author> libraryAuthors = this.RepositoryService.GetAll().Where(o => o.Books.Any()).ToList();
-
-            foreach (Author libraryAuthor in libraryAuthors)
-            {
-                book = libraryAuthor.Books.Where(o => o.Id == bookId).FirstOrDefault();
-
-                if (book != null)
-                {
-                    return libraryAuthor;
-                }
-            }
-
-            return null;
-        }
-
-        private void AddOrUpdateBooks(Author author, List<Book> books)
-        {
-            Book book;
-            Author libraryAuthor;
-            author.Books = new List<Book>();
-
-            foreach (var authorBook in books)
-            {
-                book = this.BookService.GetById(authorBook.Id);
-                if (book == null)
-                {
-                    book = this.BookService.Add(authorBook);
-                }
-                else
-                {
-                    libraryAuthor = this.GetAuthorByBookId(authorBook.Id);
-
-                    if (libraryAuthor != null && libraryAuthor.Id != author.Id)
-                    {
-                        throw new InvalidOperationException($"The book with id {book.Id} is assigned to another author");
-                    }
-
-                    this.BookService.Update(authorBook);
-                }
-
-                author.Books.Add(book);
-            }
-
-            this.RepositoryService.Update(author);
+            // TODO
+            return new Author();
         }
 
         private void ValidateEntity(Author author)

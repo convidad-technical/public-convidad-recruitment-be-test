@@ -17,8 +17,8 @@ namespace LibraryApiTests.Tests
 
         public UtilsTestsTests() 
         {
-            RepositoryService<Book> repositoryService = new RepositoryService<Book>();
-            this.BookService = new BookService(repositoryService);
+            AuthorService authorService = new AuthorService(new RepositoryService<Author>());
+            this.BookService = new BookService(new RepositoryService<Book>(), authorService);
             Utils = new UtilsTests();
         }
 

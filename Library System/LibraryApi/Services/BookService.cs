@@ -8,10 +8,12 @@ namespace LibraryDatabase.Services
     public class BookService : IBookService, IRepository<Book>
     {
         private readonly IRepository<Book> RepositoryService;
+        private readonly IAuthorService AuthorService;
 
-        public BookService(IRepository<Book> repositoryService)
+        public BookService(IRepository<Book> repositoryService, IAuthorService authorService)
         {
             this.RepositoryService = repositoryService;
+            this.AuthorService = authorService;
         }
 
         Book IRepository<Book>.GetById(int id)
@@ -83,12 +85,12 @@ namespace LibraryDatabase.Services
         {
             if (string.IsNullOrEmpty(book.Name))
             {
-                throw new ArgumentNullException($"The name of the book cannot be empty or null.");
+                throw new ArgumentNullException("The name of the book cannot be empty or null.");
             }
 
             if (string.IsNullOrEmpty(book.Isbn))
             {
-                throw new ArgumentNullException($"The ISBN of the book cannot be empty or null.");
+                throw new ArgumentNullException("The ISBN of the book cannot be empty or null.");
             }
 
             if (!this.ValidateISBN(book.Isbn))
@@ -103,7 +105,17 @@ namespace LibraryDatabase.Services
 
             if (book.PublicationDate == null)
             {
-                throw new ArgumentException($"The publication date of the book cannot be null.");
+                throw new ArgumentException("The publication date of the book cannot be null.");
+            }
+
+            if (book.AuthorId == 0)
+            {
+                throw new ArgumentNullException("The author id of the book cannot be 0 or null.");
+            }
+
+            if (this.AuthorService.GetById(book.AuthorId) == null)
+            {
+                throw new InvalidOperationException($"The author with id {book.AuthorId} doesn't exists.");
             }
         }
     }
