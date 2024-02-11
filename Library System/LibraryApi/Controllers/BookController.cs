@@ -3,12 +3,10 @@ using LibraryDatabase.Services;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LibraryDatabase.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/book")]
     public class BookController : Controller
     {
         private readonly IBookService BookService;
@@ -25,7 +23,7 @@ namespace LibraryDatabase.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Getbook(int id)
+        public IActionResult GetBook(int id)
         {
             Book book = this.BookService.GetById(id);
             if (book == null)
