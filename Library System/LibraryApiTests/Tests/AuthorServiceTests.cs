@@ -50,7 +50,7 @@ namespace LibraryApiTests.Tests
             Assert.Equal(author.Name, libraryAuthor.Name);
             Assert.Equal(author.Nationality, libraryAuthor.Nationality);
             Assert.Equal(author.BithDate, libraryAuthor.BithDate);
-            Assert.Empty(libraryAuthor.Books);
+            Assert.Null(libraryAuthor.Books);
 
             // Update the author data
             author.Nationality = "Spanish";
@@ -122,7 +122,7 @@ namespace LibraryApiTests.Tests
             // Create a book and then assign to the author
             Book book = new Book()
             {
-                Id = 13,
+                Id = 12,
                 Isbn = this.Utils.GenerateISBN(),
                 Name = "Book test 12",
                 PublicationDate = DateTime.Now
@@ -168,6 +168,65 @@ namespace LibraryApiTests.Tests
             {
                 Assert.Null(this.BookService.GetById(deletedBook.Id));
             }
+        }
+
+        [Fact]
+        public void AuthorsWithBooksTest()
+        {
+            // Create an author with a book
+            Book book = new Book()
+            {
+                Id = 10,
+                Isbn = this.Utils.GenerateISBN(),
+                Name = "Book test 10",
+                PublicationDate = DateTime.Now
+            };
+
+            Author author1 = new Author()
+            {
+                Id = 3,
+                Name = "Author test 3",
+                Nationality = "Spanish",
+                BithDate = DateTime.Now.AddYears(-35),
+                Books = new List<Book>()
+                {
+                    book
+                }
+            };
+
+            this.AuthorService.Add(author1);
+
+            // Create a second author with the same book, excepcting to throws an exception
+            Author author2 = new Author()
+            {
+                Id = 4,
+                Name = "Author test 4",
+                Nationality = "English",
+                BithDate = DateTime.Now.AddYears(-52),
+                Books = new List<Book>()
+                {
+                    book
+                }
+            };
+
+            Assert.Throws<InvalidOperationException>(() => this.AuthorService.Add(author2));
+
+            // Assign again the book to the second author
+            author2.Books.Add(book);
+
+            // Try to update the author, expexting the same exception
+            Assert.Throws<InvalidOperationException>(() => this.AuthorService.Update(author2));
+
+            // Try to assign the book with another method
+            this.AuthorService.AddExistingBookToAuthorById(author2.Id, book.Id);
+
+            // Check if the author1 doesn't has the book
+            Author authorLibrary = this.AuthorService.GetById(author1.Id);
+            Assert.DoesNotContain(book, authorLibrary.Books);
+
+            // Check if the author2 has the book
+            authorLibrary = this.AuthorService.GetById(author2.Id);
+            Assert.Contains(book, authorLibrary.Books);
         }
     }
 }
