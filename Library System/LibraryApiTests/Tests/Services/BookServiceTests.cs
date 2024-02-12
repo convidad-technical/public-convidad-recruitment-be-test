@@ -70,7 +70,7 @@ namespace LibraryApiTests.Tests.Services
                 Id = 10,
                 Name = "Author test 10",
                 Nationality = "Spanish",
-                BithDate = DateTime.Now.AddYears(-30)
+                BirthDate = DateTime.Now.AddYears(-30)
             };
 
             this.AuthorService.Add(author);
@@ -95,7 +95,7 @@ namespace LibraryApiTests.Tests.Services
                 Id = 11,
                 Name = "Author test 11",
                 Nationality = "French",
-                BithDate = DateTime.Now.AddYears(-45)
+                BirthDate = DateTime.Now.AddYears(-45)
             };
 
             // Update the book data
@@ -134,7 +134,7 @@ namespace LibraryApiTests.Tests.Services
                 Id = 13,
                 Name = "Author test 13",
                 Nationality = "German",
-                BithDate = DateTime.Now.AddYears(-52)
+                BirthDate = DateTime.Now.AddYears(-52)
             };
 
             this.AuthorService.Add(author);

@@ -23,7 +23,7 @@ namespace LibraryApiTests.Tests.Services
                 Id = 1,
                 Name = "Author test 1",
                 Nationality = "",
-                BithDate = DateTime.Now.AddYears(-30)
+                BirthDate = DateTime.Now.AddYears(-30)
             };
 
             // Try to update the author, expecting throws an exception
@@ -44,7 +44,7 @@ namespace LibraryApiTests.Tests.Services
             Assert.Equal(author.Id, libraryAuthor.Id);
             Assert.Equal(author.Name, libraryAuthor.Name);
             Assert.Equal(author.Nationality, libraryAuthor.Nationality);
-            Assert.Equal(author.BithDate, libraryAuthor.BithDate);
+            Assert.Equal(author.BirthDate, libraryAuthor.BirthDate);
 
             // Update the author data
             author.Nationality = "Spanish";

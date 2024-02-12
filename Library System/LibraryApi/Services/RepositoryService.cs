@@ -4,7 +4,12 @@ using System.Linq;
 
 public class RepositoryService<T> : IRepository<T> where T : IEntity
 {
-    private Dictionary<int, T> Data = new Dictionary<int, T>();
+    private readonly Dictionary<int, T> Data;
+
+    public RepositoryService()
+    {
+        Data = new Dictionary<int, T>();
+    }
 
     public T GetById(int id)
     {

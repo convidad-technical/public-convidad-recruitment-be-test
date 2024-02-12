@@ -20,9 +20,12 @@ namespace LibraryDatabase.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllBooks()
+        public IActionResult GetAllBooks(
+            [FromQuery] string name, 
+            [FromQuery] int year,
+            [FromQuery] string authorName)
         {
-            return Ok(this.BookService.GetAll());
+            return Ok(this.BookService.GetAll(name, year, authorName));
         }
 
         [HttpGet("{id}")]
@@ -46,7 +49,7 @@ namespace LibraryDatabase.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddBook(Book book)
+        public IActionResult AddBook([FromBody] Book book)
         {
             try
             {

@@ -69,6 +69,26 @@ namespace LibraryDatabase.Services
             return checkDigit == isbn[12] - '0';
         }
 
+        public List<Book> GetAll(string name, int year, string authorName)
+        {
+            List<Book> list = this.RepositoryService.GetAll();
+            List<int> authorIds = null;
+
+            if (authorName != null)
+            {
+                authorIds = this.AuthorService.GetAuthorIdsByAuthorName(authorName);
+            }
+
+            list = list.Where(o =>
+                (string.IsNullOrEmpty(name) || o.Name.Contains(name)) &&
+                (year == 0 || o.PublicationDate.Year == year) &&
+                (string.IsNullOrEmpty(authorName) || authorIds.Contains(o.AuthorId))
+            ).ToList();
+
+
+            return list;
+        }
+
         private bool CheckIfISBNAlreadyExists(string isbn, int bookId)
         {
             List<Book> books = this.RepositoryService.GetAll();
