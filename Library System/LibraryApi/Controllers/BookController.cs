@@ -34,7 +34,7 @@ namespace LibraryDatabase.Controllers
             Book book = this.BookService.GetById(id);
             if (book == null)
             {
-                throw new InvalidOperationException($"Book with id {id} not found.");
+                return NotFound($"Book with id {id} not found.");
             }
             else
             {

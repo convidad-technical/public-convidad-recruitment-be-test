@@ -33,7 +33,7 @@ namespace LibraryDatabase.Controllers
                 }
                 else
                 {
-                    return StatusCode((int)response.StatusCode, "Error retrieving data from the Open Library API.");
+                    return StatusCode((int)response.StatusCode, "Error retrieving data from the Open Library API");
                 }
             }
             catch (Exception ex)
