@@ -16,6 +16,12 @@ public interface IRepository<T>
     List<T> GetAll();
 
     /// <summary>
+    /// Retrieves all entries paged
+    /// </summary>
+    /// <returns></returns>
+    List<T> GetAllPaged(int page, int pageSize);
+
+    /// <summary>
     /// Adds a new entry
     /// </summary>
     /// <param name="entity"></param>

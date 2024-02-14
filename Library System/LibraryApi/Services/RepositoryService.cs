@@ -21,6 +21,11 @@ public class RepositoryService<T> : IRepository<T> where T : IEntity
         return this.Data.Values.ToList();
     }
 
+    public List<T> GetAllPaged(int page, int pageSize)
+    {
+        return this.Data.Values.Skip(page).Take(pageSize).ToList();
+    }
+
     public T Add(T entity)
     {
         if (this.Data.ContainsKey(entity.Id))

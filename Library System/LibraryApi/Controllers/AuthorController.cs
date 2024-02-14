@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LibraryDatabase.Controllers
 {
@@ -13,10 +12,13 @@ namespace LibraryDatabase.Controllers
     public class AuthorController : Controller
     {
         private readonly IAuthorService AuthorService;
+        private readonly IUtilsAuthor UtilsAuthor;
+        private static bool AreAuthorsGenerated = false;
 
-        public AuthorController(IAuthorService authorService)
+        public AuthorController(IAuthorService authorService, IUtilsAuthor utilsAuthor)
         {
             this.AuthorService = authorService;
+            this.UtilsAuthor = utilsAuthor;
         }
 
         [HttpPost]
@@ -38,14 +40,26 @@ namespace LibraryDatabase.Controllers
             [FromQuery] int page,
             [FromQuery] int size)
         {
-            int startIndex = (page - 1) * size;
+            if (size > 10000)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "El tamaño máximo de página es 100000");
+            }
 
-            List<Author> authors = this.AuthorService.GenerateRandomAuthors(3000000)
-                                                        .Skip(startIndex)
-                                                        .Take(size)
-                                                        .ToList();
+            // Checks if the authors have not been generated
+            if (!AreAuthorsGenerated)
+            {
+                this.UtilsAuthor.GenerateRandomAuthors(3000000);
+                AreAuthorsGenerated = true;
+            }
 
-            return Ok(authors);
+            int index = size * (page - 1);
+
+            List<Author> authors = this.AuthorService.GetAllPaged(index, size);
+
+            var json = JsonConvert.SerializeObject(authors, Formatting.Indented);
+
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+            return File(bytes, "application/json", "data.json");
         }
     }
 }

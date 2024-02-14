@@ -24,6 +24,11 @@ namespace LibraryDatabase.Services
             return this.RepositoryService.GetAll();
         }
 
+        List<Author> IRepository<Author>.GetAllPaged(int page, int pageSize)
+        {
+            return this.RepositoryService.GetAllPaged(page, pageSize);
+        }
+
         Author IRepository<Author>.Add(Author author)
         {
             this.ValidateEntity(author);
@@ -48,33 +53,6 @@ namespace LibraryDatabase.Services
         public List<int> GetAuthorIdsByAuthorName(string name)
         {
             return this.RepositoryService.GetAll().Where(o => o.Name.Contains(name)).Select(o => o.Id).ToList();
-        }
-
-        public List<Author> GenerateRandomAuthors(int quantity)
-        {
-            Random random = new Random();
-            List<Author> authors = new List<Author>();
-
-            for (int i = 0; i < quantity; i++)
-            {
-                Author author = new Author
-                {
-                    Id = i + 1,
-                    Name = "Author " + (i + 1),
-                    Nationality = "Nationality " + (i + 1),
-                    BirthDate = RandomDate(random)
-                };
-                authors.Add(author);
-            }
-
-            return authors;
-        }
-
-        private DateTime RandomDate(Random random)
-        {
-            DateTime start = new DateTime(1900, 1, 1);
-            int range = (DateTime.Today - start).Days;
-            return start.AddDays(random.Next(range));
         }
 
         private void ValidateEntity(Author author)

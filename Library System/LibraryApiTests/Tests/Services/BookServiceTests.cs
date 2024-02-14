@@ -37,7 +37,7 @@ namespace LibraryApiTests.Tests.Services
         [Fact]
         public void CRUDBookTest()
         {
-            // Create a new book with ISBN and Name empty
+            // Creates a new book with ISBN and Name empty
             Book book = new Book()
             {
                 Id = 1,
@@ -57,7 +57,7 @@ namespace LibraryApiTests.Tests.Services
             Assert.Throws<ArgumentNullException>(() => BookService.Add(book));
 
             // Sets the ISBN of the book with an incorrect one, expecting throws an exception
-            book.Isbn = "0";
+            book.Isbn = "123";
             Assert.Throws<ArgumentException>(() => BookService.Add(book));
 
             // Sets a correct ISBN to save the book, expecting throws an exception
@@ -74,12 +74,12 @@ namespace LibraryApiTests.Tests.Services
             };
 
             this.AuthorService.Add(author);
-            book.AuthorId = 10;
 
-            // Now saves the book correctly
+            // Sets the author of the book and save it
+            book.AuthorId = 10;
             this.BookService.Add(book);
 
-            // Get the book and check values
+            // Gets the book and check values
             Book libraryBook = BookService.GetById(book.Id);
 
             Assert.NotNull(libraryBook);
@@ -89,7 +89,7 @@ namespace LibraryApiTests.Tests.Services
             Assert.Equal(book.PublicationDate, libraryBook.PublicationDate);
             Assert.Equal(book.AuthorId, libraryBook.AuthorId);
 
-            // Creates another author to chenge the author of the current book
+            // Creates another author to change the author of the current book
             author = new Author()
             {
                 Id = 11,

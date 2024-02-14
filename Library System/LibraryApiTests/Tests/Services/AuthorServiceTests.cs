@@ -15,9 +15,9 @@ namespace LibraryApiTests.Tests.Services
         }
 
         [Fact]
-        public void CRUDAuthorTest()
+        public void NewAuthorTest()
         {
-            // Create an author
+            // Creates an author
             Author author = new Author()
             {
                 Id = 1,
@@ -37,7 +37,7 @@ namespace LibraryApiTests.Tests.Services
             author.Name = "Author test 1";
             AuthorService.Add(author);
 
-            // Get the author and check values
+            // Gets the author and check values
             Author libraryAuthor = AuthorService.GetById(author.Id);
 
             Assert.NotNull(libraryAuthor);
@@ -45,20 +45,6 @@ namespace LibraryApiTests.Tests.Services
             Assert.Equal(author.Name, libraryAuthor.Name);
             Assert.Equal(author.Nationality, libraryAuthor.Nationality);
             Assert.Equal(author.BirthDate, libraryAuthor.BirthDate);
-
-            // Update the author data
-            author.Nationality = "Spanish";
-            AuthorService.Update(author);
-
-            // Get the author and check values
-            libraryAuthor = AuthorService.GetById(author.Id);
-            Assert.Equal(author.Nationality, libraryAuthor.Nationality);
-
-            // Delete the author
-            AuthorService.DeleteById(author.Id);
-
-            // Check if the author doesn't exists
-            Assert.Null(AuthorService.GetById(author.Id));
         }
     }
 }

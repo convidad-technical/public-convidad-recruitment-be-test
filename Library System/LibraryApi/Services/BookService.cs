@@ -26,6 +26,11 @@ namespace LibraryDatabase.Services
             return this.RepositoryService.GetAll();
         }
 
+        List<Book> IRepository<Book>.GetAllPaged(int page, int pageSize)
+        {
+            return this.RepositoryService.GetAllPaged(page, pageSize);
+        }
+
         Book IRepository<Book>.Add(Book book)
         {
             this.ValidateEntity(book);

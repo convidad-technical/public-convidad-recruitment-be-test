@@ -1,5 +1,3 @@
-using LibraryDatabase.Domain;
-using LibraryDatabase.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -36,9 +34,9 @@ namespace LibraryDatabase.Controllers
                     return StatusCode((int)response.StatusCode, "Error retrieving data from the Open Library API");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return StatusCode(500, $"Error processing the request: {ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Error processing the request: {e.Message}");
             }
         }
     }

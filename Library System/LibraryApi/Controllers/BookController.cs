@@ -21,7 +21,7 @@ namespace LibraryDatabase.Controllers
 
         [HttpGet]
         public IActionResult GetAllBooks(
-            [FromQuery] string name, 
+            [FromQuery] string name,
             [FromQuery] int year,
             [FromQuery] string authorName)
         {

@@ -25,6 +25,7 @@ namespace LibraryApiTests.Tests
         [Fact]
         public void ISBNGeneratorTest()
         {
+            // Generates an isbn and checks if it's valid
             string isbn = this.Utils.GenerateISBN();
             Assert.True(this.BookService.ValidateISBN(isbn));
         }

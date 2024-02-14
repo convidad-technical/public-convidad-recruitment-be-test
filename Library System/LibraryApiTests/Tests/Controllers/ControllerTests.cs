@@ -2,6 +2,7 @@
 using LibraryDatabase.Controllers;
 using LibraryDatabase.Domain;
 using LibraryDatabase.Services;
+using LibraryDatabase.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
@@ -18,7 +19,8 @@ namespace LibraryApiTests.Tests.Controllers
         {
             AuthorService authorService = new AuthorService(new RepositoryService<Author>());
             BookService bookService = new BookService(new RepositoryService<Book>(), authorService);
-            this.AuthorController = new AuthorController(authorService);
+            UtilsAuthor utilsAuthor = new UtilsAuthor(authorService);
+            this.AuthorController = new AuthorController(authorService, utilsAuthor);
             this.BookController = new BookController(bookService, authorService);
             this.Utils = new UtilsTests();
         }
@@ -42,7 +44,7 @@ namespace LibraryApiTests.Tests.Controllers
         [Fact]
         public void AddAuthorReturnsKOResult()
         {
-            // Creates a new author, expecting an error
+            // Creates an author, expecting an error because the name is empty
             Author author = new Author()
             {
                 Id = 21,
@@ -66,6 +68,7 @@ namespace LibraryApiTests.Tests.Controllers
         [Fact]
         public void AddBookReturnsOKResult()
         {
+            // Creates an author
             Author author = new Author
             {
                 Id = 21,
@@ -74,6 +77,7 @@ namespace LibraryApiTests.Tests.Controllers
 
             this.AuthorController.AddAuthor(author);
 
+            // Creates a book
             Book book = new Book()
             {
                 Id = 20,
@@ -85,6 +89,7 @@ namespace LibraryApiTests.Tests.Controllers
 
             var result = this.BookController.AddBook(book) as OkObjectResult;
 
+            // Validates response and data
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             Assert.Equal(book.Id, result.Value);
@@ -93,7 +98,7 @@ namespace LibraryApiTests.Tests.Controllers
         [Fact]
         public void AddBookReturnsKOResult()
         {
-            // Create a new book and add it by API, expecting throws an exception
+            // Creates a book of an author who doesn't exists, expecting an error
             Book book = new Book()
             {
                 Id = 21,

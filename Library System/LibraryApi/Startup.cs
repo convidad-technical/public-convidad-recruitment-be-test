@@ -1,5 +1,6 @@
 using LibraryDatabase.Domain;
 using LibraryDatabase.Services;
+using LibraryDatabase.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -30,6 +31,7 @@ namespace LibraryDatabase
 
             services.AddTransient<IAuthorService, AuthorService>();
             services.AddTransient<IBookService, BookService>();
+            services.AddTransient<IUtilsAuthor, UtilsAuthor>();
 
             services.AddHttpClient();
 
