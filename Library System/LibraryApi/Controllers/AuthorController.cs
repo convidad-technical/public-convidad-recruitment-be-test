@@ -42,7 +42,7 @@ namespace LibraryDatabase.Controllers
         {
             if (size > 10000)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "El tamaño máximo de página es 100000");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Maximum page size is 100000");
             }
 
             // Checks if the authors have not been generated
