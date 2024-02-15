@@ -1,46 +1,65 @@
+using LibraryDatabase.Domain;
+using LibraryDatabase.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LibraryDatabase.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/books")]
     public class BookController : Controller
     {
-        public Dictionary<int, Book> Librarybooks = new Dictionary<int, Book>();
-        public Dictionary<int, Author> Libraryauthors = new Dictionary<int, Author>();
+        private readonly IBookService BookService;
+        private readonly IAuthorService AuthorService;
 
-        public BookController(Dictionary<int, Book> librarybooks)
+        public BookController(IBookService bookService, IAuthorService authorService)
         {
-            this.Librarybooks = librarybooks;
+            this.BookService = bookService;
+            this.AuthorService = authorService;
         }
 
         [HttpGet]
-        public IActionResult GetAllBooks()
+        public IActionResult GetAllBooks(
+            [FromQuery] string name,
+            [FromQuery] int year,
+            [FromQuery] string authorName)
         {
-            return Ok(Librarybooks.Values);
+            return Ok(this.BookService.GetAll(name, year, authorName));
         }
 
         [HttpGet("{id}")]
-        public IActionResult getbook(int id)
+        public IActionResult GetBook(int id)
         {
-            if (!Librarybooks.ContainsKey(id))
+            Book book = this.BookService.GetById(id);
+            if (book == null)
             {
-                throw new Exception();
+                return NotFound($"Book with id {id} not found.");
             }
             else
             {
-                return Ok(Librarybooks[id]);
+                Author author = this.AuthorService.GetById(book.AuthorId);
+
+                return Ok(new BookWithAuthorDTO()
+                {
+                    Book = book,
+                    Author = author
+                });
             }
         }
 
         [HttpPost]
-        public IActionResult AddBook(Book book)
+        public IActionResult AddBook([FromBody] Book book)
         {
-            Librarybooks.Add(book.Id, book);
-            return Ok(book.Id);
+            try
+            {
+                book = this.BookService.Add(book);
+                return Ok(book.Id);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            }
         }
     }
 }
