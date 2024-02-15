@@ -26,9 +26,6 @@ namespace LibraryApiTests.Tests.Services
                 BirthDate = DateTime.Now.AddYears(-30)
             };
 
-            // Try to update the author, expecting throws an exception
-            Assert.Throws<ArgumentException>(() => AuthorService.Update(author));
-
             // Add the author withot name expecting throws an exception
             author.Name = string.Empty;
             Assert.Throws<ArgumentNullException>(() => AuthorService.Add(author));

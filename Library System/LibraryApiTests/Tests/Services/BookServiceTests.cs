@@ -46,9 +46,6 @@ namespace LibraryApiTests.Tests.Services
                 PublicationDate = DateTime.Now
             };
 
-            // Try to update the book, expecting throws an exception
-            Assert.Throws<ArgumentException>(() => BookService.Update(book));
-
             // Add the book expecting throws an exception
             Assert.Throws<ArgumentNullException>(() => BookService.Add(book));
 
@@ -103,24 +100,6 @@ namespace LibraryApiTests.Tests.Services
             book.Name = "Book test 1 updated";
             book.PublicationDate = DateTime.Now.AddMonths(-1);
             book.AuthorId = author.Id;
-
-            BookService.Update(book);
-
-            // Get the book and check values
-            libraryBook = BookService.GetById(book.Id);
-
-            Assert.NotNull(libraryBook);
-            Assert.Equal(book.Id, libraryBook.Id);
-            Assert.Equal(book.Isbn, libraryBook.Isbn);
-            Assert.Equal(book.Name, libraryBook.Name);
-            Assert.Equal(book.PublicationDate, libraryBook.PublicationDate);
-            Assert.Equal(book.AuthorId, libraryBook.AuthorId);
-
-            // Delete the book
-            BookService.DeleteById(book.Id);
-
-            // Check if the book doesn't exists
-            Assert.Null(BookService.GetById(libraryBook.Id));
         }
 
         [Fact]

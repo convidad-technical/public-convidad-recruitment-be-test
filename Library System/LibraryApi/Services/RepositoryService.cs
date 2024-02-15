@@ -16,14 +16,28 @@ public class RepositoryService<T> : IRepository<T> where T : IEntity
         return this.Data.ContainsKey(id) ? this.Data[id] : default(T);
     }
 
-    public List<T> GetAll()
+    public List<T> GetAll(Func<T, bool> predicate = null)
     {
-        return this.Data.Values.ToList();
+        if (predicate == null)
+        {
+            return this.Data.Values.ToList();
+        }
+        else
+        {
+            return this.Data.Values.Where(predicate).ToList();
+        }
     }
 
-    public List<T> GetAllPaged(int page, int pageSize)
+    public List<T> GetAllPaged(int page, int pageSize, Func<T, bool> predicate = null)
     {
-        return this.Data.Values.Skip(page).Take(pageSize).ToList();
+        if (predicate == null)
+        {
+            return this.Data.Values.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        }
+        else
+        {
+            return this.Data.Values.Where(predicate).Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        }
     }
 
     public T Add(T entity)
@@ -35,23 +49,5 @@ public class RepositoryService<T> : IRepository<T> where T : IEntity
 
         this.Data.Add(entity.Id, entity);
         return entity;
-    }
-
-    public void Update(T entity)
-    {
-        if (!this.Data.ContainsKey(entity.Id))
-        {
-            throw new ArgumentException($"Entity with Id {entity.Id} doesn't exists.");
-        }
-
-        this.Data[entity.Id] = entity;
-    }
-
-    public void DeleteById(int id)
-    {
-        if (this.Data.ContainsKey(id))
-        {
-            this.Data.Remove(id);
-        }
     }
 }

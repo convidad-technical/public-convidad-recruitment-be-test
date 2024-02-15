@@ -19,14 +19,14 @@ namespace LibraryDatabase.Services
             return this.RepositoryService.GetById(id);
         }
 
-        List<Author> IRepository<Author>.GetAll()
+        List<Author> IRepository<Author>.GetAll(Func<Author, bool> predicate = null)
         {
-            return this.RepositoryService.GetAll();
+            return this.RepositoryService.GetAll(predicate);
         }
 
-        List<Author> IRepository<Author>.GetAllPaged(int page, int pageSize)
+        List<Author> IRepository<Author>.GetAllPaged(int page, int pageSize, Func<Author, bool> predicate = null)
         {
-            return this.RepositoryService.GetAllPaged(page, pageSize);
+            return this.RepositoryService.GetAllPaged(page, pageSize, predicate);
         }
 
         Author IRepository<Author>.Add(Author author)
@@ -38,21 +38,9 @@ namespace LibraryDatabase.Services
             return author;
         }
 
-        void IRepository<Author>.Update(Author author)
-        {
-            this.ValidateEntity(author);
-
-            this.RepositoryService.Update(author);
-        }
-
-        void IRepository<Author>.DeleteById(int id)
-        {
-            this.RepositoryService.DeleteById(id);
-        }
-
         public List<int> GetAuthorIdsByAuthorName(string name)
         {
-            return this.RepositoryService.GetAll().Where(o => o.Name.Contains(name)).Select(o => o.Id).ToList();
+            return this.RepositoryService.GetAll(o => o.Name.Contains(name)).Select(o => o.Id).ToList();
         }
 
         private void ValidateEntity(Author author)

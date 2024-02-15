@@ -36,13 +36,16 @@ namespace LibraryDatabase.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetThreeMillionAuthors(
-            [FromQuery] int page,
-            [FromQuery] int size)
+        public IActionResult GetThreeMillionAuthors(int page, int size)
         {
             if (size > 10000)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Maximum page size is 100000");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Maximum page size is 10000");
+            }
+
+            if (page < 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "The page has to be greater than or equal to 0");
             }
 
             // Checks if the authors have not been generated

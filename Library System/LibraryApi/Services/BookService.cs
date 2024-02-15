@@ -21,14 +21,14 @@ namespace LibraryDatabase.Services
             return this.RepositoryService.GetById(id);
         }
 
-        List<Book> IRepository<Book>.GetAll()
+        List<Book> IRepository<Book>.GetAll(Func<Book, bool> predicate = null)
         {
-            return this.RepositoryService.GetAll();
+            return this.RepositoryService.GetAll(predicate);
         }
 
-        List<Book> IRepository<Book>.GetAllPaged(int page, int pageSize)
+        List<Book> IRepository<Book>.GetAllPaged(int page, int pageSize, Func<Book, bool> predicate = null)
         {
-            return this.RepositoryService.GetAllPaged(page, pageSize);
+            return this.RepositoryService.GetAllPaged(page, pageSize, predicate);
         }
 
         Book IRepository<Book>.Add(Book book)
@@ -36,16 +36,6 @@ namespace LibraryDatabase.Services
             this.ValidateEntity(book);
 
             return this.RepositoryService.Add(book);
-        }
-
-        void IRepository<Book>.Update(Book book)
-        {
-            this.RepositoryService.Update(book);
-        }
-
-        void IRepository<Book>.DeleteById(int id)
-        {
-            this.RepositoryService.DeleteById(id);
         }
 
         public bool ValidateISBN(string isbn)
