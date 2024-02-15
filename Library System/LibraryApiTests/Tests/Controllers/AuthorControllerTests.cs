@@ -1,28 +1,23 @@
-﻿using LibraryApiTests.Utils;
-using LibraryDatabase.Controllers;
+﻿using LibraryDatabase.Controllers;
 using LibraryDatabase.Domain;
 using LibraryDatabase.Services;
 using LibraryDatabase.Utils;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Xunit;
 
 namespace LibraryApiTests.Tests.Controllers
 {
-    public class ControllerTests
+    public class AuthorControllerTests
     {
         private readonly AuthorController AuthorController;
-        private readonly BookController BookController;
-        private readonly UtilsTests Utils;
 
-        public ControllerTests()
+        public AuthorControllerTests()
         {
             AuthorService authorService = new AuthorService(new RepositoryService<Author>());
-            BookService bookService = new BookService(new RepositoryService<Book>(), authorService);
             UtilsAuthor utilsAuthor = new UtilsAuthor(authorService);
             this.AuthorController = new AuthorController(authorService, utilsAuthor);
-            this.BookController = new BookController(bookService, authorService);
-            this.Utils = new UtilsTests();
         }
 
         [Fact]
@@ -66,49 +61,22 @@ namespace LibraryApiTests.Tests.Controllers
         }
 
         [Fact]
-        public void AddBookReturnsOKResult()
+        public void GetThreeMillionAuthorsOK()
         {
-            // Creates an author
-            Author author = new Author
-            {
-                Id = 21,
-                Name = "Author test 21"
-            };
-
-            this.AuthorController.AddAuthor(author);
-
-            // Creates a book
-            Book book = new Book()
-            {
-                Id = 20,
-                Isbn = this.Utils.GenerateISBN(),
-                Name = "Book test 20",
-                PublicationDate = DateTime.Now,
-                AuthorId = 21
-            };
-
-            var result = this.BookController.AddBook(book) as OkObjectResult;
-
-            // Validates response and data
+            // Calls the method
+            var result = this.AuthorController.GetThreeMillionAuthors(0, 500) as ActionResult;
             Assert.NotNull(result);
-            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.Equal(book.Id, result.Value);
         }
 
         [Fact]
-        public void AddBookReturnsKOResult()
+        public void GetThreeMillionAuthorsKO()
         {
-            // Creates a book of an author who doesn't exists, expecting an error
-            Book book = new Book()
-            {
-                Id = 21,
-                Isbn = this.Utils.GenerateISBN(),
-                Name = "Book test 21",
-                PublicationDate = DateTime.Now,
-                AuthorId = 22
-            };
+            // Calls the method with a negative number page, expecting throws an exception
+            var result = this.AuthorController.GetThreeMillionAuthors(-1, 100) as ObjectResult;
+            Assert.Equal(StatusCodes.Status500InternalServerError, result?.StatusCode);
 
-            var result = this.BookController.AddBook(book) as ObjectResult;
+            // Calls the method with exceding the size page, expecting throws an exception
+            result = this.AuthorController.GetThreeMillionAuthors(1, 20000) as ObjectResult;
             Assert.Equal(StatusCodes.Status500InternalServerError, result?.StatusCode);
         }
     }
