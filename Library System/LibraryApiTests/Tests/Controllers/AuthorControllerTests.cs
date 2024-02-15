@@ -5,6 +5,8 @@ using LibraryDatabase.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Net.Http.Json;
 using Xunit;
 
 namespace LibraryApiTests.Tests.Controllers
@@ -64,8 +66,13 @@ namespace LibraryApiTests.Tests.Controllers
         public void GetThreeMillionAuthorsOK()
         {
             // Calls the method
-            var result = this.AuthorController.GetThreeMillionAuthors(0, 500) as ActionResult;
+            var result = this.AuthorController.GetThreeMillionAuthors(0, 10) as FileContentResult;
             Assert.NotNull(result);
+
+            // Check if the file has 100 authors
+            string jsonResult = System.Text.Encoding.UTF8.GetString(result.FileContents);
+            List<Author> authors = JsonConvert.DeserializeObject<List<Author>>(jsonResult);
+            Assert.True(authors.Count == 10);
         }
 
         [Fact]

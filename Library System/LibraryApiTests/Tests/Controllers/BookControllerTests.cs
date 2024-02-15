@@ -14,14 +14,16 @@ namespace LibraryApiTests.Tests.Controllers
         private readonly AuthorController AuthorController;
         private readonly BookController BookController;
         private readonly UtilsTests Utils;
+        private readonly IAuthorService AuthorService;
+        private readonly IBookService BookService;
 
         public BookControllerTests()
         {
-            AuthorService authorService = new AuthorService(new RepositoryService<Author>());
-            BookService bookService = new BookService(new RepositoryService<Book>(), authorService);
-            UtilsAuthor utilsAuthor = new UtilsAuthor(authorService);
-            this.AuthorController = new AuthorController(authorService, utilsAuthor);
-            this.BookController = new BookController(bookService, authorService);
+            this.AuthorService = new AuthorService(new RepositoryService<Author>());
+            this.BookService = new BookService(new RepositoryService<Book>(), this.AuthorService);
+            UtilsAuthor utilsAuthor = new UtilsAuthor(this.AuthorService);
+            this.AuthorController = new AuthorController(this.AuthorService, utilsAuthor);
+            this.BookController = new BookController(this.BookService, this.AuthorService);
             this.Utils = new UtilsTests();
         }
 

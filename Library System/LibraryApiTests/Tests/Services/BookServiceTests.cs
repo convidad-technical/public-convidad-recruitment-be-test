@@ -35,7 +35,7 @@ namespace LibraryApiTests.Tests.Services
         }
 
         [Fact]
-        public void CRUDBookTest()
+        public void NewBookTest()
         {
             // Creates a new book with ISBN and Name empty
             Book book = new Book()
@@ -85,21 +85,6 @@ namespace LibraryApiTests.Tests.Services
             Assert.Equal(book.Name, libraryBook.Name);
             Assert.Equal(book.PublicationDate, libraryBook.PublicationDate);
             Assert.Equal(book.AuthorId, libraryBook.AuthorId);
-
-            // Creates another author to change the author of the current book
-            author = new Author()
-            {
-                Id = 11,
-                Name = "Author test 11",
-                Nationality = "French",
-                BirthDate = DateTime.Now.AddYears(-45)
-            };
-
-            // Update the book data
-            book.Isbn = Utils.GenerateISBN();
-            book.Name = "Book test 1 updated";
-            book.PublicationDate = DateTime.Now.AddMonths(-1);
-            book.AuthorId = author.Id;
         }
 
         [Fact]
